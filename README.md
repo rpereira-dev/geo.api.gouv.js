@@ -3,6 +3,8 @@ Binding javascript de https://geo.api.gouv.fr/
 
 Demo : https://jsfiddle.net/jq95nsmz/9/
 
+Documentation : https://htmlpreview.github.io/?https://github.com/rpereira-dev/geo.api.gouv.js/blob/master/docs/index.html
+
 # Utilisation
 Inclures la bibliothèque dans le header de votre page (voir dossier 'dist/')
 ```html
