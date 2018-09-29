@@ -1,7 +1,7 @@
 # geo.gouv.js
 Binding javascript de https://geo.api.gouv.fr/
 
-Demo : https://jsfiddle.net/jq95nsmz/4/
+Demo : https://jsfiddle.net/jq95nsmz/9/
 
 # Utilisation
 Inclures la bibliothèque dans le header de votre page (voir dossier 'dist/')
