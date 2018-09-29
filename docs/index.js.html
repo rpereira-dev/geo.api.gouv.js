@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Contient l'API javascript navigateur, wrapper de 'geo.api.gouv.fr'
+ * @author Romain PEREIRA
+ */
+
+
+/** définit l'api si elle n'existe pas */
+if (typeof Gouv == 'undefined') {
+    Gouv = {};
+}
+
+/** définit la fonction 'request' */
+if (typeof Gouv.request == 'undefined') {
+    Gouv.request = {};
+}
+
+/** définit la fonction 'request.get' */
+if (typeof Gouv.request.get == 'undefined') {
+    /**
+     * Executes une requete GET à l'url donné, avec les paramètres données
+     * @param {string} url 
+     * @param {Object} parameters 
+     */
+    Gouv.request.get = (url, parameters) => {
+        if (Object.keys(parameters).length > 0) {
+            let parametersArray = [];
+            for (let parameterName in parameters) {
+                parametersArray.push(encodeURIComponent(parameterName) + '=' + encodeURIComponent(parameters[parameterName]));
+            }
+            url += '?' + parametersArray.join('&amp;');
+        }
+        return fetch(url, { method: 'GET' }).then(async r => {
+            r.res = await r.text();
+            return Promise.resolve(r);
+        });
+    }
+}
+
+
+/**
+ * Le module 'geo' de l'API
+ * @namespace geo
+ */
+Gouv.geo = {
+    /**
+     * Le module 'communes'
+     * @namespace geo.communes
+     */
+    communes: {
+        /**
+         * Recupere des communes
+         * @param {Object} parameters les paramètres de la requete ('codePostal', 'lat', ..., 'fields', 'format', 'geometry')
+         * @memberof geo.communes
+         */
+        get(parameters = { nom: 'Paris' }) {
+            return Gouv.request.get('https://geo.api.gouv.fr/communes', parameters);
+        },
+
+        /**
+         * Le module 'code' 
+         * @namespace geo.communes.code
+         */
+        code: {
+            /**
+             * Recupere une commune par son code INSEE
+             * @param {number} code le code INSEE de la commune
+             * @param {Object} parameters les paramètres de la requete ('fields', 'format', 'geometry')
+             * @memberof geo.communes.code
+             */
+            get(code = '77339', parameters = {}) {
+                return Gouv.request.get(`https://geo.api.gouv.fr/communes/${code}`, parameters);
+            }
+        },
+    },
+
+    /**
+     * Le module 'departement'
+     * @namespace geo.departements
+     */
+    departements: {
+        /**
+         * Le module 'departements.code'
+         * @namespace geo.departements.code
+         */
+        code: {
+            /**
+             * Récupérer les informations concernant un département
+             * @param {number} code le code du département
+             * @param {Object} parameters les paramètres de la requete ('fields')
+             * @memberof geo.departements.code
+             */
+            get(code = '77', parameters = {}) {
+                return Gouv.request.get(`https://geo.api.gouv.fr/departements/${code}`, parameters);
+            },
+
+            /**
+             * Le module 'departement'
+             * @namespace geo.departements.code.communes
+             */
+            communes: {
+                /**
+                 * Renvoi les communes d'un département
+                 * @param {number} code le code du département
+                 * @param {Object} parameters les paramètres de la requete ('fields', 'format', 'geometry')
+                 * @memberof geo.departements.code.communes
+                 */
+                get(code = '77', parameters = {}) {
+                    return Gouv.request.get(`https://geo.api.gouv.fr/departements/${code}/communes`, parameters);
+                }
+            },
+        },
+        /**
+         * Recherche des départements
+         * @param {Object} parameters les paramètres de la requete ('code', 'codeRegion', fields', 'format', 'geometry')
+         * @memberof geo.departements
+         */
+        get(parameters = {}) {
+            return Gouv.request.get(`https://geo.api.gouv.fr/departements`, parameters);
+        },
+    },
+
+    /**
+     * Le module 'regions'
+     * @namespace geo.regions
+     */
+    regions: {
+        /**
+         * Le module 'regions.code'
+         * @namespace geo.regions.code
+         */
+        code: {
+            /**
+             * Renvoi les départements d'une région
+             * @param {number} code le code de la region
+             * @param {Object} parameters les paramètres de la requete ('code', 'codeRegion', fields', 'format', 'geometry')
+             * @memberof geo.regions.code
+             */
+            get(code = '11', parameters = {}) {
+                return Gouv.request.get(`https://geo.api.gouv.fr/regions/${code}`, parameters);
+            },
+
+            /**
+             * Le module 'regions.code.departements'
+             * @namespace geo.regions.code.departements
+             */
+            departements: {
+                /**
+                 * Renvoi les départements d'une région
+                 * @param {number} code le code de la region
+                 * @param {Object} parameters les paramètres de la requete ('code', 'codeRegion', fields', 'format', 'geometry')
+                 * @memberof geo.regions.code.departements
+                 */
+                get(code = '11', parameters = {}) {
+                    return Gouv.request.get(`https://geo.api.gouv.fr/regions/${code}/departements`, parameters);
+                },
+            }
+        }
+    }
+};</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="geo.html">geo</a></li><li><a href="geo.communes.html">communes</a></li><li><a href="geo.communes.code.html">code</a></li><li><a href="geo.departements.html">departements</a></li><li><a href="geo.departements.code.html">code</a></li><li><a href="geo.departements.code.communes.html">communes</a></li><li><a href="geo.regions.html">regions</a></li><li><a href="geo.regions.code.html">code</a></li><li><a href="geo.regions.code.departements.html">departements</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Sep 29 2018 18:32:49 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

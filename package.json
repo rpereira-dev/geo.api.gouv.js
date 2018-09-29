@@ -1,0 +1,31 @@
+{
+  "name": "geo.gouv.js",
+  "version": "1.0.0",
+  "description": "Binding javascript de l'API geo.api.gouv.fr",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p dist ; ./node_modules/.bin/browserify --entry index.js --outfile dist/geo.api.gouv.js ; ./node_modules/.bin/minify dist/geo.api.gouv.js > dist/geo.api.gouv.min.js",
+    "test": "npm run build ; sensible-browser example/index.html",
+    "docs": "mkdir -p docs ; ./node_modules/.bin/jsdoc index.js -d docs ; sensible-browser docs/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpereira-dev/geo.gouv.js.git"
+  },
+  "keywords": [
+    "api.gouv.fr",
+    "geo.api.gouv.fr"
+  ],
+  "author": "Romain PEREIRA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rpereira-dev/geo.gouv.js/issues"
+  },
+  "homepage": "https://github.com/rpereira-dev/geo.gouv.js#readme",
+  "dependencies": {
+    "babel-minify": "^0.5.0",
+    "browser-request": "^0.3.3",
+    "browserify": "^16.2.3",
+    "jsdoc": "^3.5.5"
+  }
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>geo.api.gouv.fr</title>
+
+    <!-- materialized css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- import api -->
+    <script src="../dist/geo.api.gouv.js"></script>
+
+
+</head>
+
+<body>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="autocomplete-input-commune" oninput="onCommuneInput(this.value)" class="autocomplete">
+                    <label for="autocomplete-input">Rechercher une commune</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" id="autocomplete-input-departement" class="autocomplete">
+                    <label for="autocomplete-input">Rechercher un département</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        var onCommuneInput = (value) => {};
+
+        // initialise les champs (materialize)
+        document.addEventListener('DOMContentLoaded', () => {
+            const elems = document.querySelectorAll('.autocomplete');
+            const instances = M.Autocomplete.init(elems, { limit: 8 });
+
+            // met à jour la liste des communes en fonction de l'entrée
+            onCommuneInput = (value) => {
+                const instance = instances[0];
+                Gouv.geo.communes.get({nom: value}).then(r => {
+                    const communes = JSON.parse(r.res);
+                    const autocompleteData = {};
+                    for (let i in communes) {
+                        autocompleteData[communes[i].nom] = null;
+                    }
+                    instance.updateData(autocompleteData);
+                });
+            }
+
+            // initialise l'input des départements
+            {
+                const instance = instances[1];
+                Gouv.geo.departements.get().then(r => {
+                    const departements = JSON.parse(r.res);
+                    const autocompleteData = {};
+                    for (let i in departements) {
+                        autocompleteData[departements[i].nom] = null;
+                    }
+                    instance.updateData(autocompleteData);
+                });
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
